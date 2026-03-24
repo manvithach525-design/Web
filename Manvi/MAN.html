@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SORRRYYYYYYY!</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+.happy {
+  font-size: 34px;
+  font-weight: bold;
+  animation: floatBounce 1.5s ease-in-out infinite;
+}
+.happy {
+  text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+@keyframes floatBounce {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-12px); }
+  100% { transform: translateY(0); }
+}
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1e1e2f, #c9d6ff, #e2e2e2);
+}
+.bubble {
+  position: absolute;
+  bottom: -50px;
+  border-radius: 50%;
+  animation: rise linear infinite;
+  opacity: 0.9;
+}
+.bubble:nth-child(3n) { background: rgba(100,149,237,0.8); }
+.bubble:nth-child(3n+1) { background: rgba(255,105,135,0.8); }
+.bubble:nth-child(3n+2) { background: rgba(120,200,160,0.8); }
+
+@keyframes rise {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-110vh); opacity: 0; }
+}
+.screen {
+  position: absolute;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 32px;
+}
+
+.btn {
+  padding: 12px 25px;
+  margin: 10px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+}
+
+.yes { background: #ff9aa2; color: white; }
+.no { background: #a0c4ff; color: white; }
+
+.back {
+  margin-top: 20px;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.message {
+  font-family: 'Dancing Script', cursive;
+  font-size: 26px;
+  background: url('https://www.transparenttextures.com/patterns/paper.png'), white;
+  padding: 15px;
+  border-radius: 10px;
+}
+.glow {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 50%;
+  pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+<div id="landing" class="screen">
+  <h1>Are you still hurt?</h1>
+  <button class="btn yes" onclick="goYes()">Yes</button>
+  <button class="btn no" onclick="goNo()">No</button>
+</div>
+<div id="yesFlow" class="screen hidden" onclick="nextMessage()">
+  <div>Tap to read...</div>
+  <div id="text" class="message"></div>
+  <div class="back" onclick="goBack(event)">← Back</div>
+</div>
+
+<div id="noFlow" class="screen hidden">
+  <div class="happy">I'm so happyyy 😭 I'm relieved!!!</div>
+  <p>So… shall we go to Charminar on Friday? 👉👈</p>
+  <p>U R CMNG!! ANTHEYYYYYYYYYYYYYYYYY </p>
+  <p>U R TAKING ME!!</p>
+  <button class="btn yes" onclick="goWhatsApp()">Yes 😌</button>
+  <button class="btn no" onclick="goWhatsApp()">Of course!</button>
+  <div class="back" onclick="goBack(event)">← Back</div>
+</div>
+<audio id="bgMusic">
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const messages = [
+  "haaaiieeeeeee achhuuuuthhhhhhhhhhhhhh!!!",
+  "I understood that I hurt you.",
+  "But seriously I really reallyyy reallyyy didn’t mean toooooooo!!",
+  "I could be irritating but its foineee!",
+  "I’m really reallyyyy reallyyyyyy reallyyyyyyy sorryyyyyyyy ",
+  "Take your time… I’ll be here💖",
+  "I cant be like this!",
+  "I need you to be like u used to be earlier!!" ,
+  "Again IM SORRRYYYYYYYYYYYYYYYYYYYYY 😭",
+  "i realllyyy meann itt abbahhhhhhh"
+];
+
+let index = 0;
+const textDiv = document.getElementById("text");
+
+let musicStarted = false;
+
+function startMusic() {
+  if (musicStarted) return;
+
+  const music = document.getElementById("bgMusic");
+  music.volume = 0.6;
+
+  music.play().then(() => {
+    musicStarted = true;
+  }).catch(() => {});
+}
+
+function goYes() {
+  startMusic();
+  switchScreen("landing", "yesFlow");
+  setTimeout(() => typeMessage(messages[index]), 400);
+}
+
+function goNo() {
+  startMusic();
+  switchScreen("landing", "noFlow");
+}
+
+function goBack(e) {
+  e.stopPropagation();
+  switchScreen("yesFlow","landing");
+  switchScreen("noFlow","landing");
+  index = 0;
+  textDiv.innerHTML="";
+}
+
+function switchScreen(from,to){
+  document.getElementById(from).classList.add("hidden");
+  document.getElementById(to).classList.remove("hidden");
+}
+
+function typeMessage(text) {
+  textDiv.innerHTML="";
+  let i=0;
+
+  let music = document.getElementById("bgMusic");
+
+  let interval=setInterval(()=>{
+    textDiv.innerHTML+=text[i];
+    if (!music.paused) {
+      music.volume = 0.5 + Math.random()*0.1;
+    }
+    i++;
+    if(i>=text.length) clearInterval(interval);
+  },50);
+}
+
+function nextMessage(){
+  if(index < messages.length-1){
+    index++;
+    typeMessage(messages[index]);
+  }
+}
+function goWhatsApp(){
+  window.location.href = "https://wa.me/917382135371?text=I'm%20in";
+}
+function createBubbles(){
+  for(let i=0;i<8;i++){
+    let b=document.createElement("div");
+    b.className="bubble";
+
+    let size=Math.random()*20+10;
+    b.style.width=size+"px";
+    b.style.height=size+"px";
+    b.style.left=Math.random()*100+"vw";
+    b.style.animationDuration=(Math.random()*5+6)+"s";
+
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),10000);
+  }
+}
+setInterval(createBubbles,2000);
+const glow=document.createElement("div");
+glow.className="glow";
+document.body.appendChild(glow);
+
+document.addEventListener("mousemove",e=>{
+  glow.style.left=e.clientX+"px";
+  glow.style.top=e.clientY+"px";
+});
+</script>
+
+</body>
+</html>
